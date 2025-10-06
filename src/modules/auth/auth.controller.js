@@ -1,12 +1,18 @@
+const authSvc = require("./auth.service");
 class AuthController {
-  registerUser = (req, res, next) => {
-    const data = req.body;
-    res.json({
-      data: data,
-      message: "register",
-      status: "SUCCESS",
-      options: null,
-    });
+  registerUser = async (req, res, next) => {
+    try {
+      const data = await authSvc.transformUserCreate(req); 
+      await authSvc.sendActivationNotification(data);
+      res.json({
+        data: data,
+        message: "register",
+        status: "SUCCESS",
+        options: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
   };
 
   activateUser = (req, res, next) => {

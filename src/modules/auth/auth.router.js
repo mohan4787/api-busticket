@@ -1,12 +1,13 @@
 const authRouter = require("express").Router()
 const bodyValidator = require("../../middlewares/request-validate.middleware")
+const uploader = require("../../middlewares/uploader.middleware")
 const AuthController = require("./auth.controller")
 const { RegisterDTO, LoginDTO, ResetPasswordRequestDTO } = require("./auth.validators")
 
 const authCtrl = new AuthController()
 
 
-authRouter.post("/register", bodyValidator(RegisterDTO), authCtrl.registerUser)
+authRouter.post("/register",uploader().single('image'), bodyValidator(RegisterDTO), authCtrl.registerUser)
 
 authRouter.get("/activate/:token", authCtrl.activateUser)
 
